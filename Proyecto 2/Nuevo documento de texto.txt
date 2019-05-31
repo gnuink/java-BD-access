@@ -1,0 +1,162 @@
+     void numeros()
+     {
+        conect = Con.Conexion();
+        int j;
+    
+        String c="";
+        String Num="SELECT MAX(Codprodxbod) AS Codprodxbod FROM ProdxBod";
+        
+        try {
+            Statement st = conect.createStatement();
+            ResultSet rs = st.executeQuery(Num);
+            if(rs.next())
+            {              
+                 c=rs.getString("Codprodxbod");
+            }
+            if(c==null)
+             {
+                 jCod.setText("0001");
+             }
+            j=Integer.parseInt(c);
+            GenerarNumeros gen= new GenerarNumeros();
+            gen.generar(j);
+            
+            jCod.setText(gen.serie());    
+             }
+            
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(IngresarProduc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+"SELECT Producto.Codprod, Producto.Descripcion, Prodxbod.Stock, Producto.Precio, Bodega.Nombre\n" +
+            "FROM Producto INNER JOIN (Bodega INNER JOIN Prodxbod ON Bodega.Codbod = Prodxbod.Codbod) ON Producto.Codprod = Prodxbod.Codprod\n" +
+            "WHERE Bodega.Nombre='"+ nombre + "'ORDER BY Producto.Codprod, Producto.Descripcion, Prodxbod.Stock, Producto.Precio, Bodega.Nombre";
+
+
+//
+
+
+else{
+                 char r1 = c.charAt(2);
+                 char r2 = c.charAt(3);
+                 char r3 = c.charAt(4);
+                 char r4 = c.charAt(5);
+                 System.out.print(""+r1+r2+r3+r4);
+                 String juntar = ""+r1+r2+r3+r4;
+                 int var=Integer.parseInt(juntar);
+                 System.out.print("\n este lo que vale numericamente"+var);
+                 GenerarNumeros gen = new GenerarNumeros();
+                 gen.generar(var);
+                 
+                 jCod.setText(gen.serie());
+                 
+             }
+            } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public boolean Vender(Movimientos mov , ProdxBod datos , String Cant , String Codprod){
+        conect = Con.Conexion();                      
+   
+        String ProdxBod = "insert Prodxbod VALUES ( Codprodxbod , Codprod, Codbod , Stock)"
+                + "UPDATE Prodxbod SET Stock = Stock - '"+ Cant + "' Where Codprod = '"+ Codprod+"'" ;
+        String Movimiento = "insert into Movimientos (Numeromov , Codprod, Codbod , Tipomov , Cantidad , Fecha , Hora , Codresp)"
+                + " values (?,?,?,?,?,?,?,?)";
+        
+        
+        try {
+            PreparedStatement pst1 = conect.prepareStatement(Movimiento); 
+            PreparedStatement pst2 = conect.prepareStatement(ProdxBod);
+            
+            pst1.setInt(1, mov.getNumeromov());
+            pst1.setInt(2, mov.getCodprod());
+            pst1.setInt(3, mov.getCodbod());
+            pst1.setString(4, mov.getTipomov());
+            pst1.setInt(5, mov.getCantidad());
+            pst1.setString(6, mov.getFecha());
+            pst1.setString(7, mov.getHora());
+            pst1.setInt(8, mov.getID_Resp());
+;
+            
+            pst2.setString(1, datos.getCodprodxbod());
+            pst2.setInt(2, datos.getCodprod());
+            pst2.setInt(3, datos.getCodprod());
+            pst2.setInt(4, datos.getStock());
+
+
+            int N1 = pst1.executeUpdate();
+            int N2 = pst2.executeUpdate();
+       
+
+            if ( N1 != 0 ||N2 != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            return false;
+        }
+
+    }
+public boolean Reponer(Movimientos mov , ProdxBod datos , int Cant , int Codprod){
+        conect = Con.Conexion();                      
+   
+        String ProdxBod = "insert Prodxbod VALUES ( Codprodxbod , Codprod, Codbod , Stock)"
+                + "UPDATE Prodxbod SET Stock = Stock + '"+ Cant + "' Where Codprod = '"+ Codprod+"'" ;
+        String Movimiento = "insert into Movimientos (Numeromov , Codprod, Codbod , Tipomov , Cantidad , Fecha , Hora , Codresp)"
+                + " values (?,?,?,?,?,?,?,?)";
+        
+        
+        try {
+            PreparedStatement pst1 = conect.prepareStatement(Movimiento); 
+            PreparedStatement pst2 = conect.prepareStatement(ProdxBod);
+            
+            pst1.setInt(1, mov.getNumeromov());
+            pst1.setInt(2, mov.getCodprod());
+            pst1.setInt(3, mov.getCodbod());
+            pst1.setString(4, mov.getTipomov());
+            pst1.setInt(5, mov.getCantidad());
+            pst1.setString(6, mov.getFecha());
+            pst1.setString(7, mov.getHora());
+            pst1.setInt(8, mov.getID_Resp());
+;
+            
+            pst2.setString(1, datos.getCodprodxbod());
+            pst2.setInt(2, datos.getCodprod());
+            pst2.setInt(3, datos.getCodprod());
+            pst2.setInt(4, datos.getStock());
+
+
+            int N1 = pst1.executeUpdate();
+            int N2 = pst2.executeUpdate();
+       
+
+            if ( N1 != 0 ||N2 != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            return false;
+        }
+}
+
+
+        String ProdxBod = "UPDATE Prodxbod SET Stock = Stock - '"+ Integer.parseInt(jtextCant.getText()) + "' Where Codprod = '"+ Integer.parseInt(jTextCod.getText())+"'" 
+                           + " values (?)";
